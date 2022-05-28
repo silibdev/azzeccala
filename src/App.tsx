@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Header } from './layout/header';
+import { Header } from './layout/Header';
 import { Game } from './game/Game';
 
 
