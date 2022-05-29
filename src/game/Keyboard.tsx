@@ -10,6 +10,7 @@ const KEYBOARD = [
 
 export const Keyboard = () => {
   const [gameState, setGameState] = useContext(GameContext);
+  // eslint-disable-next-line
   const [_, setLoader] = useContext(LoaderContext);
 
   const lettersState = gameState.guesses

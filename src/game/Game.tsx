@@ -27,8 +27,8 @@ export const Game = () => {
     DEFAULT_GAME_STATE
   );
   const [gameState, setGameState] = gameStateArr;
+  // eslint-disable-next-line
   const [_, setLoader] = useContext(LoaderContext);
-
   const lastGuess = gameState.guesses[gameState.guesses.length - 1]?.letters;
 
   useEffect(() => {
