@@ -57,11 +57,11 @@ export const Keyboard = () => {
     updateGameState(currentLetters);
   }
 
-  const confirmWord = () => {
+  const confirmWord = async () => {
     if (currentLetters.length < 5) {
       return;
     }
-    const checkedLetters = checkWord(currentLetters);
+    const checkedLetters = await checkWord(currentLetters);
     updateGameState(checkedLetters);
   }
 
