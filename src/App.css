@@ -1,3 +1,9 @@
+:root {
+    --correct: #71dc00;
+    --wrong: #ffc400;
+    --not-present: #565656;
+}
+
 .word-guesses .word {
     @apply flex justify-center py-1
 }
@@ -5,13 +11,48 @@
 .word-guesses .word .letter {
     width: 2rem;
     height: 2rem;
-    @apply border-solid border-black border text-center m-0.5
+    text-transform: uppercase;
+    @apply border-solid border-black border text-center mx-0.5
 }
 
 .word-guesses .word .letter.correct {
-    background: #71dc00;
+    background: var(--correct);
 }
 
 .word-guesses .word .letter.wrong {
-    background: #ffc400;
+    background: var(--wrong);
+}
+
+.keyboard {
+    @apply pt-4;
+}
+
+.keyboard .row {
+    @apply flex justify-center py-1
+}
+
+.keyboard .row button {
+    height: 2rem;
+    width: 1.5rem;
+    background: #b6b6b6;
+    text-transform: uppercase;
+    @apply text-center mx-0.5
+}
+
+.keyboard .row button.correct {
+    background: var(--correct);
+}
+
+.keyboard .row button.wrong {
+    background: var(--wrong);
+}
+
+.keyboard .row button.not-present {
+    background: var(--not-present);
+}
+
+.keyboard .row button.action {
+    height: 2rem;
+    width: 2.5rem;
+    text-transform: capitalize;
 }
