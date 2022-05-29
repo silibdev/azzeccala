@@ -11,7 +11,7 @@ const getAbsoluteDate = (date: Date) => {
 }
 
 const isWordPassed = (currentWordTime: string, requestedWordTime: string): boolean =>
-  new Date(currentWordTime).valueOf() - new Date(requestedWordTime).valueOf() > 1000 * 60 * 60 * 2 // 2 hours
+  new Date(requestedWordTime).valueOf() - new Date(currentWordTime).valueOf() > 1000 * 60 * 60 * 2 // 2 hours
 // getAbsoluteDate(new Date(currentWordTime)) < getAbsoluteDate(new Date())
 
 const getNewWord = async (): Promise<string> => {
@@ -33,7 +33,10 @@ const getNewWord = async (): Promise<string> => {
   }
 
   // Chose random word
-  const newWord = unusedWords[~~(Math.random() * dict.length)];
+  let newWord: string
+  do {
+    newWord = unusedWords[~~(Math.random() * dict.length)];
+  } while (!newWord);
   // Add it to used ones
   await fs.promises.appendFile(USED_WORDS, newWord + '\n');
 
@@ -52,14 +55,15 @@ const handler: Handler = async (event, _) => {
   }
 
   let wordOfTheDay: { word: string, timestamp: string } | undefined;
-  try{
+  try {
     const wordOfTheDayData = await fs.promises.readFile(WORD_OF_THE_DAY_PATH, 'utf-8');
     wordOfTheDay = JSON.parse(wordOfTheDayData);
-  } catch (e) {}
+  } catch (e) {
+  }
 
   const isPassed = !!wordOfTheDay && isWordPassed(wordOfTheDay.timestamp, requestedTimestamp);
 
-  if (!wordOfTheDay || isWordPassed(wordOfTheDay.timestamp, new Date().toISOString())) {
+  if (!wordOfTheDay || isPassed || isWordPassed(wordOfTheDay.timestamp, new Date().toISOString())) {
     // Create new word of the day
     wordOfTheDay = {
       word: await getNewWord(),
