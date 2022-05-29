@@ -7,8 +7,9 @@ import {
   GameState,
   LetterStateEnum
 } from '../contexes/GameContext';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { Win } from './Win';
+import { LoaderContext } from '../contexes/LoaderContext';
 
 function usePersistedState<S>(key: string, defaultValue: S): [S, Dispatch<SetStateAction<S>>] {
   const [state, setState] = useState<S>(
@@ -26,6 +27,7 @@ export const Game = () => {
     DEFAULT_GAME_STATE
   );
   const [gameState, setGameState] = gameStateArr;
+  const [_, setLoader] = useContext(LoaderContext);
 
   const lastGuess = gameState.guesses[gameState.guesses.length - 1]?.letters;
 
@@ -33,12 +35,13 @@ export const Game = () => {
     if (lastGuess?.length !== 5 || lastGuess[0].state === LetterStateEnum.EMPTY) {
       return;
     }
+    setLoader(true);
     checkExpiredWord(gameState.timestamp).then( expired => {
       if (expired) {
         setGameState(DEFAULT_GAME_STATE)
       }
-    })
-  }, [gameState, setGameState, lastGuess]);
+    }).finally(() => setLoader(false))
+  }, [gameState, setGameState, lastGuess, setLoader]);
 
   const currentIndex = gameState.guesses.length - 1;
   const currentGuesses = gameState.guesses[currentIndex];

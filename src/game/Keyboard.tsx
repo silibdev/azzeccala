@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { checkWord, GameContext, LetterGuess, LetterStateEnum } from '../contexes/GameContext';
+import { LoaderContext } from '../contexes/LoaderContext';
 
 const KEYBOARD = [
   ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
@@ -9,6 +10,7 @@ const KEYBOARD = [
 
 export const Keyboard = () => {
   const [gameState, setGameState] = useContext(GameContext);
+  const [_, setLoader] = useContext(LoaderContext);
 
   const lettersState = gameState.guesses
     .map(wg => wg.letters)
@@ -61,7 +63,9 @@ export const Keyboard = () => {
     if (currentLetters.length < 5) {
       return;
     }
+    setLoader(true);
     const checkedLetters = await checkWord(currentLetters);
+    setLoader(false);
     updateGameState(checkedLetters);
   }
 

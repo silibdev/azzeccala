@@ -20,6 +20,11 @@ footer .dev-link {
     @apply underline text-blue-500 hover:text-blue-700 visited:text-blue-900;
 }
 
+.loader-container {
+    background: rgba(116, 147, 164, 0.5);
+    @apply absolute top-0 left-0 w-full h-full flex justify-center items-center;
+}
+
 .btn {
     background: cornflowerblue;
     @apply rounded px-2 py-1;
