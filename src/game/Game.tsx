@@ -1,11 +1,21 @@
 import { Keyboard } from './Keyboard';
 import { WordGuesses } from './WordGuesses';
 import { GameContext, GameState, LetterStateEnum } from '../GameContext/GameContext';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Win } from './Win';
 
+function usePersistedState<S>(key: string, defaultValue: S): [S, Dispatch<SetStateAction<S>>] {
+  const [state, setState] = useState<S>(
+    () => JSON.parse(localStorage.getItem(key) || 'null') || defaultValue
+  );
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(state));
+  }, [key, state]);
+  return [state, setState];
+}
+
 export const Game = () => {
-  const gameStateArr = useState<GameState>({guesses: []});
+  const gameStateArr = usePersistedState<GameState>('azz-state', {guesses: []});
   const [gameState] = gameStateArr;
 
   const currentIndex = gameState.guesses.length - 1;
