@@ -1,3 +1,26 @@
-export const WordGuesses = () => (
-  <div>word guesses</div>
-)
+import { useContext } from 'react';
+import { GameContext, LetterStateEnum, WordGuess } from '../GameContext/GameContext';
+
+
+export const WordGuesses = () => {
+  const [gameState] = useContext(GameContext);
+  const emptyGuesses: WordGuess[] = new Array(5).fill(undefined)
+    .map((_, i) => (gameState.guesses[i] || {
+      letters: new Array(5)
+        .fill({
+          letter: '',
+          state: LetterStateEnum.EMPTY
+        })
+    }));
+  return (
+    <div className="word-guesses">
+      {emptyGuesses.map((wg, i) => (
+        <div className="word" key={i}>
+          {wg.letters.map((lg, i) => (
+            <span key={i} className={`letter ` + lg.state}>{lg.letter}</span>
+          ))}
+        </div>
+      ))}
+    </div>
+  )
+}

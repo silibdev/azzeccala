@@ -1,0 +1,17 @@
+.word-guesses .word {
+    @apply flex justify-center py-1
+}
+
+.word-guesses .word .letter {
+    width: 2rem;
+    height: 2rem;
+    @apply border-solid border-black border text-center m-0.5
+}
+
+.word-guesses .word .letter.correct {
+    background: #71dc00;
+}
+
+.word-guesses .word .letter.wrong {
+    background: #ffc400;
+}
