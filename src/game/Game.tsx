@@ -6,7 +6,7 @@ import {
   GameContext,
   GameState,
   LetterStateEnum
-} from '../GameContext/GameContext';
+} from '../contexes/GameContext';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Win } from './Win';
 

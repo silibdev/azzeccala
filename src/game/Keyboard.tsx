@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { checkWord, GameContext, LetterGuess, LetterStateEnum } from '../GameContext/GameContext';
+import { checkWord, GameContext, LetterGuess, LetterStateEnum } from '../contexes/GameContext';
 
 const KEYBOARD = [
   ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
