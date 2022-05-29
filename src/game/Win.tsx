@@ -14,7 +14,7 @@ export const Win = ({gameState}: { gameState: GameState }) => {
           case LetterStateEnum.NOT_PRESENT:
             return '⬜️'
         }
-      }).join('')
+      }).join(' ')
     ).join('\n');
   const textToShare = `Azzeccata in ${gameState.guesses.length}/6\n\n${textGameState}`;
 

@@ -14,7 +14,9 @@ export const Keyboard = () => {
     .map(wg => wg.letters)
     .flat()
     .reduce<Record<string, LetterStateEnum>>((letterMap, lg) => {
-      letterMap[lg.letter] = lg.state;
+      if (!letterMap[lg.letter]) {
+        letterMap[lg.letter] = lg.state;
+      }
       return letterMap;
     }, {});
 

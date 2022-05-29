@@ -4,7 +4,7 @@ import { GameContext, LetterStateEnum, WordGuess } from '../GameContext/GameCont
 
 export const WordGuesses = () => {
   const [gameState] = useContext(GameContext);
-  const emptyGuesses: WordGuess[] = new Array(5).fill(undefined)
+  const emptyGuesses: WordGuess[] = new Array(6).fill(undefined)
     .map((_, i) => ({
       letters: new Array(5)
         .fill({
