@@ -5,12 +5,13 @@ import { GameContext, LetterStateEnum, WordGuess } from '../GameContext/GameCont
 export const WordGuesses = () => {
   const [gameState] = useContext(GameContext);
   const emptyGuesses: WordGuess[] = new Array(5).fill(undefined)
-    .map((_, i) => (gameState.guesses[i] || {
+    .map((_, i) => ({
       letters: new Array(5)
         .fill({
           letter: '',
           state: LetterStateEnum.EMPTY
         })
+        .map( (lg, j) => gameState.guesses[i]?.letters[j] || lg)
     }));
   return (
     <div className="word-guesses">

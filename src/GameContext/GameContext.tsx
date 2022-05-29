@@ -25,3 +25,25 @@ export const GameContext = createContext<[GameState, Dispatch<SetStateAction<Gam
   () => {
   }
 ])
+
+const currentWord = 'chest'
+
+export const checkWord = (wordGuess: LetterGuess[]): LetterGuess[] =>
+  wordGuess.map( (lg, i) => {
+    if (currentWord.includes(lg.letter) && currentWord.indexOf(lg.letter) === i) {
+      return {
+        letter: lg.letter,
+        state: LetterStateEnum.CORRECT
+      }
+    }
+    if (currentWord.includes(lg.letter)) {
+      return {
+        letter: lg.letter,
+        state: LetterStateEnum.WRONG
+      }
+    }
+    return {
+      letter: lg.letter,
+      state: LetterStateEnum.NOT_PRESENT
+    }
+  })
