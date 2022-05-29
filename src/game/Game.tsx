@@ -2,6 +2,7 @@ import { Keyboard } from './Keyboard';
 import { WordGuesses } from './WordGuesses';
 import { GameContext, GameState, LetterStateEnum } from '../GameContext/GameContext';
 import { useState } from 'react';
+import { Win } from './Win';
 
 export const Game = () => {
   const gameStateArr = useState<GameState>({guesses: []});
@@ -17,8 +18,8 @@ export const Game = () => {
       <GameContext.Provider value={gameStateArr}>
         <WordGuesses></WordGuesses>
         {!lose && !win && <Keyboard></Keyboard>}
-        {lose && !win && <p className="text-center">Hai perso!</p>}
-        {win && <p className="text-center">Hai vinto!</p>}
+        {lose && !win && <p className="text-center text-2xl font-bold">Sei una pippa!</p>}
+        {win && <Win gameState={gameState}></Win>}
       </GameContext.Provider>
     </div>
   )

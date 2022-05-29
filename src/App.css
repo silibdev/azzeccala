@@ -4,15 +4,24 @@
     --not-present: #565656;
 }
 
+.btn {
+    background: cornflowerblue;
+    @apply rounded px-2 py-1;
+}
+
+p {
+    @apply py-2;
+}
+
 .word-guesses .word {
-    @apply flex justify-center py-1
+    @apply flex justify-center py-1;
 }
 
 .word-guesses .word .letter {
     width: 2rem;
     height: 2rem;
     text-transform: uppercase;
-    @apply border-solid border-black border text-center mx-0.5
+    @apply border-solid border-black border text-center mx-0.5;
 }
 
 .word-guesses .word .letter.correct {
@@ -28,7 +37,7 @@
 }
 
 .keyboard .row {
-    @apply flex justify-center py-1
+    @apply flex justify-center py-1;
 }
 
 .keyboard .row button {
@@ -36,7 +45,7 @@
     width: 1.5rem;
     background: #b6b6b6;
     text-transform: uppercase;
-    @apply text-center mx-0.5
+    @apply text-center mx-0.5;
 }
 
 .keyboard .row button.correct {
