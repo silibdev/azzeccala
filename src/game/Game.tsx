@@ -1,6 +1,12 @@
 import { Keyboard } from './Keyboard';
 import { WordGuesses } from './WordGuesses';
-import { GameContext, GameState, LetterStateEnum } from '../GameContext/GameContext';
+import {
+  checkExpiredWord,
+  DEFAULT_GAME_STATE,
+  GameContext,
+  GameState,
+  LetterStateEnum
+} from '../GameContext/GameContext';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Win } from './Win';
 
@@ -15,13 +21,29 @@ function usePersistedState<S>(key: string, defaultValue: S): [S, Dispatch<SetSta
 }
 
 export const Game = () => {
-  const gameStateArr = usePersistedState<GameState>('azz-state', {guesses: []});
-  const [gameState] = gameStateArr;
+  const gameStateArr = usePersistedState<GameState>(
+    'azz-state',
+    DEFAULT_GAME_STATE
+  );
+  const [gameState, setGameState] = gameStateArr;
+
+  const lastGuess = gameState.guesses[gameState.guesses.length - 1]?.letters;
+
+  useEffect(() => {
+    if (lastGuess?.length !== 5 || lastGuess[0].state === LetterStateEnum.EMPTY) {
+      return;
+    }
+    checkExpiredWord(gameState.timestamp).then( expired => {
+      if (expired) {
+        setGameState(DEFAULT_GAME_STATE)
+      }
+    })
+  }, [gameState, setGameState, lastGuess]);
 
   const currentIndex = gameState.guesses.length - 1;
   const currentGuesses = gameState.guesses[currentIndex];
   const lose = currentIndex === 5 && currentGuesses && currentGuesses.letters[0].state !== LetterStateEnum.EMPTY;
-  const win = currentGuesses && !!currentGuesses.letters.length && currentGuesses.letters.every( lg => lg.state === LetterStateEnum.CORRECT);
+  const win = currentGuesses && !!currentGuesses.letters.length && currentGuesses.letters.every(lg => lg.state === LetterStateEnum.CORRECT);
 
   return (
     <div>
