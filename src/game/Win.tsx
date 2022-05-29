@@ -13,6 +13,8 @@ export const Win = ({gameState}: { gameState: GameState }) => {
             return '🟨';
           case LetterStateEnum.NOT_PRESENT:
             return '⬜️'
+          default:
+            return '🟫';
         }
       }).join(' ')
     ).join('\n');
@@ -37,7 +39,7 @@ export const Win = ({gameState}: { gameState: GameState }) => {
   return (
     <div className="text-center">
       <p className="text-2xl font-bold">Daje!</p>
-      <button className="btn" onClick={share}>Condividi</button>
+      <button className="btn text-xl" onClick={share}>Condividi</button>
       {copiedText && <p>{copiedText}</p>}
     </div>
   )
