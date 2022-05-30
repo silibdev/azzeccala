@@ -16,9 +16,9 @@ export const Win = ({gameState}: { gameState: GameState }) => {
           default:
             return '🟫';
         }
-      }).join(' ')
+      }).join('')
     ).join('\n');
-  const textToShare = `Azzeccata in ${gameState.guesses.length}/6\n\n${textGameState}`;
+  const textToShare = `#${gameState.id} Azzeccata in ${gameState.guesses.length}/6\n${textGameState}`;
 
   const share = () => {
     if (navigator.share) {

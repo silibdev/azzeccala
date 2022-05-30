@@ -2,7 +2,7 @@ import { createContext, Dispatch, SetStateAction } from 'react';
 
 export interface GameState {
   guesses: WordGuess[],
-  timestamp: string
+  id?: number
 }
 
 export interface WordGuess {
@@ -21,15 +21,15 @@ export enum LetterStateEnum {
   EMPTY = 'empty'
 }
 
-export const DEFAULT_GAME_STATE = {guesses: [], timestamp: new Date().toISOString()};
+export const DEFAULT_GAME_STATE = () => ({guesses: []});
 
 export const GameContext = createContext<[GameState, Dispatch<SetStateAction<GameState>>]>([
-  DEFAULT_GAME_STATE,
+  DEFAULT_GAME_STATE(),
   () => {
   }
 ])
 
-export const checkWord = (wordGuess: LetterGuess[]): Promise<LetterGuess[]> => {
+export const checkWord = (wordGuess: LetterGuess[]): Promise<{ letters: LetterGuess[], id: number }> => {
   const body = {word: wordGuess.map(lg => lg.letter).join('')};
   return fetch('./.netlify/functions/word-check', {
     method: 'POST',
@@ -39,8 +39,8 @@ export const checkWord = (wordGuess: LetterGuess[]): Promise<LetterGuess[]> => {
     .then(resp => resp.result)
 }
 
-export const checkExpiredWord = async (timestamp: string): Promise<boolean>  => {
-  return fetch('./.netlify/functions/word-expired?timestamp=' + timestamp)
+export const checkExpiredWord = async (id?: number): Promise<{ isExpired: boolean, id: number }>  => {
+  return fetch('./.netlify/functions/word-expired?id=' + id)
     .then(resp => resp.json())
     .then(resp => resp.result);
 }

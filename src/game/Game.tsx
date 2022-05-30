@@ -24,24 +24,20 @@ function usePersistedState<S>(key: string, defaultValue: S): [S, Dispatch<SetSta
 export const Game = () => {
   const gameStateArr = usePersistedState<GameState>(
     'azz-state',
-    DEFAULT_GAME_STATE
+    DEFAULT_GAME_STATE()
   );
   const [gameState, setGameState] = gameStateArr;
   // eslint-disable-next-line
   const [_, setLoader] = useContext(LoaderContext);
-  const lastGuess = gameState.guesses[gameState.guesses.length - 1]?.letters;
 
   useEffect(() => {
-    if (lastGuess?.length !== 5 || lastGuess[0].state === LetterStateEnum.EMPTY) {
-      return;
-    }
     setLoader(true);
-    checkExpiredWord(gameState.timestamp).then( expired => {
-      if (expired) {
-        setGameState(DEFAULT_GAME_STATE)
+    checkExpiredWord(gameState.id).then( expired => {
+      if (expired.isExpired) {
+        setGameState({...DEFAULT_GAME_STATE(), id: expired.id})
       }
     }).finally(() => setLoader(false))
-  }, [gameState, setGameState, lastGuess, setLoader]);
+  }, []);
 
   const currentIndex = gameState.guesses.length - 1;
   const currentGuesses = gameState.guesses[currentIndex];

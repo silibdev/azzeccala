@@ -1,6 +1,6 @@
 {
   "name": "azzeccala",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@netlify/functions": "^1.0.0",
@@ -11,6 +11,8 @@
     "@types/node": "^16.11.36",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.5",
+    "cross-fetch": "^3.1.5",
+    "dotenv": "^16.0.1",
     "netlify-cli": "^10.3.3",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
@@ -20,6 +22,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:all": "netlify dev",
+    "populate-remote-dict": "node ./upstash-redis-scripts/populate-remote-dictionary.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

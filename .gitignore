@@ -24,5 +24,4 @@ yarn-error.log*
 
 .idea
 .netlify
-netlify/functions/used-words.txt
-netlify/functions/word-of-the-day.json
+.env

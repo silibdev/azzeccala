@@ -1,5 +1,12 @@
 import { useContext } from 'react';
-import { checkWord, GameContext, LetterGuess, LetterStateEnum } from '../contexes/GameContext';
+import {
+  checkExpiredWord,
+  checkWord,
+  DEFAULT_GAME_STATE,
+  GameContext,
+  LetterGuess,
+  LetterStateEnum
+} from '../contexes/GameContext';
 import { LoaderContext } from '../contexes/LoaderContext';
 
 const KEYBOARD = [
@@ -36,11 +43,14 @@ export const Keyboard = () => {
   const currentWordGuess = (gameState.guesses[currentIndex] || {letters: []});
   const currentLetters = currentWordGuess.letters;
 
-  const updateGameState = (letters: LetterGuess[]) => {
+  const updateGameState = (letters: LetterGuess[], id?: number) => {
     gameState.guesses[currentIndex] = {
       ...currentWordGuess,
       letters
     };
+    if (typeof id === 'number') {
+      gameState.id = id;
+    }
     setGameState({...gameState});
   }
 
@@ -48,11 +58,11 @@ export const Keyboard = () => {
     if (currentLetters.length >= 5) {
       return;
     }
-    currentLetters.push({
+
+    updateGameState(currentLetters.concat({
       letter,
       state: LetterStateEnum.EMPTY
-    });
-    updateGameState(currentLetters)
+    }))
   }
 
   const deleteLastLetter = () => {
@@ -65,24 +75,33 @@ export const Keyboard = () => {
       return;
     }
     setLoader(true);
-    const checkedLetters = await checkWord(currentLetters);
+    const [{letters, id}, expired] = await Promise.all([
+      checkWord(currentLetters),
+      checkExpiredWord(gameState.id)
+    ])
     setLoader(false);
-    updateGameState(checkedLetters);
+    if (expired.isExpired || gameState.id !== id) {
+      setGameState({
+        ...DEFAULT_GAME_STATE(),
+        id: expired.id
+      })
+    } else {
+      updateGameState(letters, id);
+    }
   }
 
   return (<div className="keyboard">
     {keyboard.map((lettersRow, i) => (
       <div className="row" key={i}>
-        {(i === 2) ? (<button className="action" onClick={deleteLastLetter}>Del</button>) : ''}
+        {i === 2 && (<button className="action" onClick={confirmWord}>Enter</button>)}
         {lettersRow.map(ls => (
           <button
             key={ls.letter}
             className={ls.state}
-            disabled={ls.state === LetterStateEnum.NOT_PRESENT}
             onClick={addLetter(ls.letter)}
           >{ls.letter}</button>
         ))}
-        {(i === 2) ? (<button className="action" onClick={confirmWord}>Enter</button>) : ''}
+        {i === 2 && (<button className="action" onClick={deleteLastLetter}>Del</button>)}
       </div>
     ))}
   </div>)
