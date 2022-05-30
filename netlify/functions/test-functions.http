@@ -1,3 +1,4 @@
+### Test word-check
 POST http://localhost:8888/.netlify/functions/word-check
 Content-Type: application/json
 
@@ -5,6 +6,6 @@ Content-Type: application/json
   "word": "ciao"
 }
 
-###
-GET http://localhost:8888/.netlify/functions/word-expired?timestamp=2022-05-29T22:18:45.536Z
+### Test word-expired
+GET http://localhost:8888/.netlify/functions/word-expired
 Content-Type: application/json
