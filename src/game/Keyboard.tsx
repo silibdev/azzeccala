@@ -93,7 +93,7 @@ export const Keyboard = () => {
   return (<div className="keyboard">
     {keyboard.map((lettersRow, i) => (
       <div className="row" key={i}>
-        {(i === 2) ? (<button className="action" onClick={deleteLastLetter}>Del</button>) : ''}
+        {i === 2 && (<button className="action" onClick={confirmWord}>Enter</button>)}
         {lettersRow.map(ls => (
           <button
             key={ls.letter}
@@ -101,7 +101,7 @@ export const Keyboard = () => {
             onClick={addLetter(ls.letter)}
           >{ls.letter}</button>
         ))}
-        {(i === 2) ? (<button className="action" onClick={confirmWord}>Enter</button>) : ''}
+        {i === 2 && (<button className="action" onClick={deleteLastLetter}>Del</button>)}
       </div>
     ))}
   </div>)

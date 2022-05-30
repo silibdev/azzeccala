@@ -53,6 +53,10 @@ p {
     background: var(--wrong);
 }
 
+.word-guesses .word .letter.not-present {
+    background: #b6b6b6;
+}
+
 .keyboard {
     @apply pt-4;
 }
