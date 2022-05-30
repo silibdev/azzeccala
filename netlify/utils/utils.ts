@@ -2,10 +2,10 @@ const fetch = require('cross-fetch').default;
 
 const UPSTASH_REDIS_URL = process.env.UPSTASH_REDIS_URL as string;
 const UPSTASH_REDIS_TOKEN = process.env.UPSTASH_REDIS_TOKEN;
-const WOTD_KEY = (process.env.NETLIFY ? '' : 'test-') + 'word-of-the-day';
-const WORD_EXPIRATION = process.env.WORD_EXP || 'h:0.025';
+const WOTD_KEY = (process.env.PROD ? '' : 'test-') + 'word-of-the-day';
+const WORD_EXPIRATION = process.env.WORD_EXP || 'h:2';
 const DICTIONARY_KEY = 'dictionary';
-const USED_WORDS_KEY = (process.env.NETLIFY ? '' : 'test-') + 'used-words';
+const USED_WORDS_KEY = (process.env.PROD ? '' : 'test-') + 'used-words';
 
 export interface WordOfTheDay {
   word: string;
