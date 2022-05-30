@@ -32,11 +32,12 @@ export const Game = () => {
 
   useEffect(() => {
     setLoader(true);
-    checkExpiredWord(gameState.id).then( expired => {
+    checkExpiredWord(gameState.id).then(expired => {
       if (expired.isExpired) {
         setGameState({...DEFAULT_GAME_STATE(), id: expired.id})
       }
     }).finally(() => setLoader(false))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const currentIndex = gameState.guesses.length - 1;
