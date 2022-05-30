@@ -13,12 +13,13 @@ const handler: Handler = async (event, _) => {
     return {statusCode: 400, body: "Bad Request"}
   }
 
-  const currentWord = (await getWordOfTheDay())?.word;
-  const result = checkWord(currentWord || '', body.word.split(''));
+  const wordOfTheDay = (await getWordOfTheDay());
+  const currentWord = wordOfTheDay.word;
+  const letters = checkWord(currentWord || '', body.word.split(''));
 
   return {
     statusCode: 200,
-    body: JSON.stringify({result})
+    body: JSON.stringify({result: {letters, id: wordOfTheDay.id}})
   };
 };
 

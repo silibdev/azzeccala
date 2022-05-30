@@ -1,15 +1,16 @@
-require('dotenv').config();
+const fetch = require('cross-fetch').default;
 
 const UPSTASH_REDIS_URL = process.env.UPSTASH_REDIS_URL as string;
 const UPSTASH_REDIS_TOKEN = process.env.UPSTASH_REDIS_TOKEN;
-const WOTD_KEY = (process.env.NETLIFY ? 'test-' : '') + 'word-of-the-day';
-const WORD_EXPIRATION = process.env.WORD_EXP || 'h:2';
+const WOTD_KEY = (process.env.NETLIFY ? '' : 'test-') + 'word-of-the-day';
+const WORD_EXPIRATION = process.env.WORD_EXP || 'h:0.025';
 const DICTIONARY_KEY = 'dictionary';
-const USED_WORDS_KEY = (process.env.NETLIFY ? 'test-' : '') + 'used-words';
+const USED_WORDS_KEY = (process.env.NETLIFY ? '' : 'test-') + 'used-words';
 
 export interface WordOfTheDay {
   word: string;
   timestamp: string;
+  id: number;
 }
 
 export interface LetterGuess {
@@ -34,18 +35,23 @@ const execRedisCommand = (command: string, ...args: string[]) => fetch(UPSTASH_R
   .then(res => res.json())
   .then(json => json.result)
 
-export const getWordOfTheDay = async (): Promise<WordOfTheDay | null> => {
+export const getWordOfTheDay = async (): Promise<WordOfTheDay> => {
   const wotdData = await execRedisCommand('GET', WOTD_KEY);
-  return JSON.parse(wotdData) as WordOfTheDay;
+  if (wotdData) {
+    return JSON.parse(wotdData) as WordOfTheDay;
+  }
+  return  updateWordOfTheDay();
 }
 
-export const updateWordOfTheDay = async () =>
-  execRedisCommand(
-    'SET', WOTD_KEY, JSON.stringify({
-      word: await selectNewWord(),
-      timestamp: new Date().toISOString()
-    })
-  )
+export const updateWordOfTheDay = async () => {
+  const {word, id} = await selectNewWord();
+  const newWordOfTheDay: WordOfTheDay = {
+    word,
+    id,
+    timestamp: new Date().toISOString()
+  };
+  return execRedisCommand('SET', WOTD_KEY, JSON.stringify(newWordOfTheDay)).then(() => newWordOfTheDay);
+}
 
 export const getDictionary = async (): Promise<string[]> => execRedisCommand('SMEMBERS', DICTIONARY_KEY);
 
@@ -71,17 +77,23 @@ const isDatePassed = (refDate: Date, checkDate: Date): boolean => {
   return false;
 }
 
-export const isWordStillValid = async () => {
-  const wordOfTheDay = await getWordOfTheDay();
-  if (!wordOfTheDay) {
-    return false;
-  }
+export const isWordValid = async (id: number): Promise<[boolean, number]> => {
+  let wordOfTheDay = await getWordOfTheDay();
+
+  // Check if word timer has expired
   const wordTime = new Date(wordOfTheDay.timestamp);
   const now = new Date();
-  return isDatePassed(now, wordTime);
+  const isWordStillValid = !isDatePassed(now, wordTime);
+  if (!isWordStillValid) {
+    wordOfTheDay = await updateWordOfTheDay();
+  }
+
+  const wordValidForClient = wordOfTheDay.id === id;
+
+  return [isWordStillValid && wordValidForClient, wordOfTheDay.id];
 }
 
-export const selectNewWord = async (): Promise<string> => {
+export const selectNewWord = async (): Promise<{ word: string, id: number }> => {
   const dict = await getDictionary();
   const usedWords = await getUsedWords();
 
@@ -103,5 +115,8 @@ export const selectNewWord = async (): Promise<string> => {
   // Add it to used ones
   await addUsedWord(newWord);
 
-  return newWord;
+  return {
+    word: newWord,
+    id: dict.length - unusedWords.length
+  };
 }

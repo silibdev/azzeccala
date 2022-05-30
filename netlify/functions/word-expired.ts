@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions';
-import { isWordStillValid, updateWordOfTheDay } from '../utils/utils';
+import { isWordValid } from '../utils/utils';
 
 const handler: Handler = async (event, _) => {
   // Only allow GET
@@ -7,15 +7,13 @@ const handler: Handler = async (event, _) => {
     return {statusCode: 405, body: "Method Not Allowed"};
   }
 
-  const isWordValid = await isWordStillValid();
+  const id = event.queryStringParameters.id;
 
-  if (!isWordValid) {
-    await updateWordOfTheDay();
-  }
+  const [isValid, idCurrentWord] = await isWordValid(+id);
 
   return {
     statusCode: 200,
-    body: JSON.stringify({result: isWordValid})
+    body: JSON.stringify({result: {isExpired: !isValid, id: idCurrentWord}})
   };
 };
 
