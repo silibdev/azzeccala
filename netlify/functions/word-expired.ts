@@ -7,7 +7,10 @@ const handler: Handler = async (event, _) => {
     return {statusCode: 405, body: "Method Not Allowed"};
   }
 
-  const id = event.queryStringParameters.id;
+  const id = event.queryStringParameters?.id;
+  if (!id) {
+    return {statusCode: 400, body: "Bad Request"}
+  }
 
   const [isValid, idCurrentWord] = await isWordValid(+id);
 

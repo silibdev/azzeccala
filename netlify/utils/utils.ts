@@ -32,8 +32,8 @@ const execRedisCommand = (command: string, ...args: string[]) => fetch(UPSTASH_R
   },
   body: JSON.stringify([command, ...args])
 })
-  .then(res => res.json())
-  .then(json => json.result)
+  .then((res: any) => res.json())
+  .then((json: any) => json.result)
 
 export const getWordOfTheDay = async (): Promise<WordOfTheDay> => {
   const wotdData = await execRedisCommand('GET', WOTD_KEY);
@@ -56,7 +56,7 @@ export const updateWordOfTheDay = async () => {
 export const getDictionary = async (): Promise<string[]> => execRedisCommand('SMEMBERS', DICTIONARY_KEY);
 
 export const getUsedWords = async (): Promise<Set<string>> =>
-  execRedisCommand('SMEMBERS', USED_WORDS_KEY).then(usedWords => new Set(usedWords));
+  execRedisCommand('SMEMBERS', USED_WORDS_KEY).then((usedWords: string[]) => new Set(usedWords));
 
 export const addUsedWord = async (newWord: string) => execRedisCommand('SADD', USED_WORDS_KEY, newWord);
 

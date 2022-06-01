@@ -43,13 +43,16 @@ export const Keyboard = () => {
   const currentWordGuess = (gameState.guesses[currentIndex] || {letters: []});
   const currentLetters = currentWordGuess.letters;
 
-  const updateGameState = (letters: LetterGuess[], id?: number) => {
+  const updateGameState = (letters: LetterGuess[], id?: number, word?: string) => {
     gameState.guesses[currentIndex] = {
       ...currentWordGuess,
       letters
     };
     if (typeof id === 'number') {
       gameState.id = id;
+    }
+    if (typeof word === 'string') {
+      gameState.word = word;
     }
     setGameState({...gameState});
   }
@@ -75,7 +78,7 @@ export const Keyboard = () => {
       return;
     }
     setLoader(true);
-    const [{letters, id}, expired] = await Promise.all([
+    const [{letters, id, word}, expired] = await Promise.all([
       checkWord(currentLetters),
       checkExpiredWord(gameState.id)
     ])
@@ -86,7 +89,7 @@ export const Keyboard = () => {
         id: expired.id
       })
     } else {
-      updateGameState(letters, id);
+      updateGameState(letters, id, word);
     }
   }
 
