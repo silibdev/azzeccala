@@ -45,7 +45,8 @@ export const GameOver = ({gameState, win, lose}: { gameState: GameState, win: bo
   }
   return (
     <div className="text-center">
-      <p className="text-2xl font-bold">{win && 'Daje!'}{lose && 'Sono una pippa!'}</p>
+      <p className="text-2xl font-bold">{win && 'Daje!'}{lose && 'Sei una pippa!'}</p>
+      {lose && <div className="pb-3 text-xl">La parola era "<span className="uppercase">{gameState.word}</span>"</div>}
       <button className="btn text-xl" onClick={share}>Condividi</button>
       {copiedText && <p>{copiedText}</p>}
     </div>

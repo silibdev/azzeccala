@@ -19,7 +19,7 @@ const handler: Handler = async (event, _) => {
 
   return {
     statusCode: 200,
-    body: JSON.stringify({result: {letters, id: wordOfTheDay.id}})
+    body: JSON.stringify({result: {letters, id: wordOfTheDay.id, word: wordOfTheDay.word}})
   };
 };
 

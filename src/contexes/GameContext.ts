@@ -2,7 +2,8 @@ import { createContext, Dispatch, SetStateAction } from 'react';
 
 export interface GameState {
   guesses: WordGuess[],
-  id?: number
+  id?: number,
+  word?: string
 }
 
 export interface WordGuess {
@@ -29,7 +30,7 @@ export const GameContext = createContext<[GameState, Dispatch<SetStateAction<Gam
   }
 ])
 
-export const checkWord = (wordGuess: LetterGuess[]): Promise<{ letters: LetterGuess[], id: number }> => {
+export const checkWord = (wordGuess: LetterGuess[]): Promise<{ letters: LetterGuess[], id: number, word: string }> => {
   const body = {word: wordGuess.map(lg => lg.letter).join('')};
   return fetch('./.netlify/functions/word-check', {
     method: 'POST',
@@ -39,7 +40,7 @@ export const checkWord = (wordGuess: LetterGuess[]): Promise<{ letters: LetterGu
     .then(resp => resp.result)
 }
 
-export const checkExpiredWord = async (id?: number): Promise<{ isExpired: boolean, id: number }>  => {
+export const checkExpiredWord = async (id?: number): Promise<{ isExpired: boolean, id: number, word: string }>  => {
   return fetch('./.netlify/functions/word-expired?id=' + id)
     .then(resp => resp.json())
     .then(resp => resp.result);
