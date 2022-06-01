@@ -8,7 +8,7 @@ import {
   LetterStateEnum
 } from '../contexes/GameContext';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
-import { Win } from './Win';
+import { GameOver } from './GameOver';
 import { LoaderContext } from '../contexes/LoaderContext';
 
 function usePersistedState<S>(key: string, defaultValue: S): [S, Dispatch<SetStateAction<S>>] {
@@ -50,8 +50,7 @@ export const Game = () => {
       <GameContext.Provider value={gameStateArr}>
         <WordGuesses></WordGuesses>
         {!lose && !win && <Keyboard></Keyboard>}
-        {lose && !win && <p className="text-center text-2xl font-bold">Sei una pippa!</p>}
-        {win && <Win gameState={gameState}></Win>}
+        {(win || lose) && <GameOver gameState={gameState} win={win} lose={lose}></GameOver>}
       </GameContext.Provider>
     </div>
   )
