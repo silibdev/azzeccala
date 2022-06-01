@@ -1,6 +1,6 @@
 {
   "name": "azzeccala",
-  "version": "0.2.2",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@netlify/functions": "^1.0.0",
