@@ -70,9 +70,9 @@ const isDatePassed = (refDate: Date, checkDate: Date): boolean => {
   const [mode, value] = WORD_EXPIRATION.split(':');
   switch (mode) {
     case 'h':
-      return refDate.valueOf() - checkDate.valueOf() > 1000 * 60 * 60 * +value;
+      return refDate.valueOf() - checkDate.valueOf() >= 1000 * 60 * 60 * +value;
     case 'd':
-      return getAbsoluteDate(refDate) - getAbsoluteDate(checkDate) > 1000 * 60 * 60 * 24 * +value;
+      return getAbsoluteDate(refDate) - getAbsoluteDate(checkDate) >= 1000 * 60 * 60 * 24 * +value;
   }
   return false;
 }
