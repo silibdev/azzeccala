@@ -23,24 +23,29 @@ const handler: Handler = async (event, _) => {
   };
 };
 
-const checkWord = (currentWord: string, letters: string[]): LetterGuess[] =>
-  letters.map((letter, i) => {
+const checkWord = (currentWord: string, letters: string[]): LetterGuess[] => {
+  return letters.map((letter, i) => {
     if (currentWord.includes(letter) && currentWord[i] === letter) {
+      currentWord = currentWord.replace(letter, '*');
       return {
         letter,
         state: LetterStateEnum.CORRECT
-      }
-    }
-    if (currentWord.includes(letter)) {
-      return {
-        letter,
-        state: LetterStateEnum.WRONG
-      }
+      };
     }
     return {
       letter,
       state: LetterStateEnum.NOT_PRESENT
     }
+  }).map((letterState) => {
+    if (currentWord.includes(letterState.letter)) {
+      currentWord = currentWord.replace(letterState.letter, '*');
+      return {
+        letter: letterState.letter,
+        state: LetterStateEnum.WRONG
+      }
+    }
+    return letterState;
   })
+}
 
 export { handler };
