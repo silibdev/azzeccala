@@ -42,15 +42,18 @@ export const Game = () => {
 
   const currentIndex = gameState.guesses.length - 1;
   const currentGuesses = gameState.guesses[currentIndex];
+
   const lose = currentIndex === 5 && currentGuesses && currentGuesses.letters[0].state !== LetterStateEnum.EMPTY;
   const win = currentGuesses && !!currentGuesses.letters.length && currentGuesses.letters.every(lg => lg.state === LetterStateEnum.CORRECT);
+  const finish = win || lose;
 
   return (
     <div>
       <GameContext.Provider value={gameStateArr}>
         <WordGuesses></WordGuesses>
-        {!lose && !win && <Keyboard></Keyboard>}
-        {(win || lose) && <GameOver gameState={gameState} win={win} lose={lose}></GameOver>}
+        {!finish
+          ? <Keyboard></Keyboard>
+          : <GameOver gameState={gameState} win={win}></GameOver>}
       </GameContext.Provider>
     </div>
   )
