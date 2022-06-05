@@ -6,8 +6,8 @@ import {
   GameContext,
   LetterGuess,
   LetterStateEnum
-} from '../contexes/GameContext';
-import { LoaderContext } from '../contexes/LoaderContext';
+} from '../../contexes/GameContext';
+import { LoaderContext } from '../../contexes/LoaderContext';
 
 const KEYBOARD = [
   ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],

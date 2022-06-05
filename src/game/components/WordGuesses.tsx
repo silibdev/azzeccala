@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { GameContext, LetterStateEnum, WordGuess } from '../contexes/GameContext';
+import { GameContext, LetterStateEnum, WordGuess } from '../../contexes/GameContext';
 
 
 export const WordGuesses = () => {

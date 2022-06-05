@@ -1,4 +1,4 @@
-import { GameState, LetterStateEnum } from '../contexes/GameContext';
+import { GameState, LetterStateEnum } from '../../contexes/GameContext';
 import { useState } from 'react';
 
 export const GameOver = ({gameState, win}: { gameState: GameState, win: boolean }) => {

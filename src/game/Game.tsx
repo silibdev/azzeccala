@@ -1,5 +1,5 @@
-import { Keyboard } from './Keyboard';
-import { WordGuesses } from './WordGuesses';
+import { Keyboard } from './components/Keyboard';
+import { WordGuesses } from './components/WordGuesses';
 import {
   checkExpiredWord,
   DEFAULT_GAME_STATE,
@@ -8,7 +8,7 @@ import {
   LetterStateEnum
 } from '../contexes/GameContext';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
-import { GameOver } from './GameOver';
+import { GameOver } from './components/GameOver';
 import { LoaderContext } from '../contexes/LoaderContext';
 
 function usePersistedState<S>(key: string, defaultValue: S): [S, Dispatch<SetStateAction<S>>] {
