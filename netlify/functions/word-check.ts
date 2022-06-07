@@ -24,9 +24,10 @@ const handler: Handler = async (event, _) => {
 };
 
 const checkWord = (currentWord: string, letters: string[]): LetterGuess[] => {
+  const wordArr = currentWord.split('');
   return letters.map((letter, i) => {
-    if (currentWord.includes(letter) && currentWord[i] === letter) {
-      currentWord = currentWord.replace(letter, '*');
+    if (wordArr.includes(letter) && wordArr[i] === letter) {
+      wordArr[i] = '*';
       return {
         letter,
         state: LetterStateEnum.CORRECT
@@ -37,8 +38,11 @@ const checkWord = (currentWord: string, letters: string[]): LetterGuess[] => {
       state: LetterStateEnum.NOT_PRESENT
     }
   }).map((letterState) => {
-    if (currentWord.includes(letterState.letter)) {
-      currentWord = currentWord.replace(letterState.letter, '*');
+    if (letterState.state === LetterStateEnum.CORRECT) {
+      return letterState;
+    }
+    if (wordArr.includes(letterState.letter)) {
+      wordArr[wordArr.findIndex((l) => letterState.letter === l)] = '*';
       return {
         letter: letterState.letter,
         state: LetterStateEnum.WRONG
