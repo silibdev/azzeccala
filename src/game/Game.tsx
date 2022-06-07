@@ -43,7 +43,7 @@ export const Game = () => {
   const currentIndex = gameState.guesses.length - 1;
   const currentGuesses = gameState.guesses[currentIndex];
 
-  const lose = currentIndex === 5 && currentGuesses && currentGuesses.letters[0].state !== LetterStateEnum.EMPTY;
+  const lose = currentIndex === 5 && currentGuesses && currentGuesses.letters.length && currentGuesses.letters[0]?.state !== LetterStateEnum.EMPTY;
   const win = currentGuesses && !!currentGuesses.letters.length && currentGuesses.letters.every(lg => lg.state === LetterStateEnum.CORRECT);
   const finish = win || lose;
 
