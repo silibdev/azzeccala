@@ -5,7 +5,7 @@ import {
   DEFAULT_GAME_STATE,
   GameContext,
   GameState, LetterGuess,
-  LetterStateEnum, WordGuess
+  LetterStateEnum
 } from '../contexes/GameContext';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { GameOver } from './components/GameOver';
@@ -40,12 +40,14 @@ export const Game = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const currentIndex = gameState.guesses.length - 1;
-  const currentWordGuess: WordGuess | undefined = gameState.guesses[currentIndex];
+  const indexOfFirstEmpty = gameState.guesses.findIndex(wg => wg.letters.length === 0 || wg.letters[0].state === LetterStateEnum.EMPTY);
+  const currentIndex = indexOfFirstEmpty < 0 ? gameState.guesses.length : indexOfFirstEmpty;
+  const currentWordGuess = gameState.guesses[currentIndex] || { letters: [] };
   const currentLetters = currentWordGuess.letters;
+  const prevLetters = gameState.guesses[currentIndex - 1]?.letters || [];
 
-  const lose = currentIndex === 5 && currentWordGuess?.letters[0]?.state !== LetterStateEnum.EMPTY;
-  const win = currentWordGuess?.letters.every(lg => lg.state === LetterStateEnum.CORRECT);
+  const lose = currentIndex === 6 && prevLetters.length && prevLetters[0]?.state !== LetterStateEnum.EMPTY;
+  const win = !!prevLetters.length && prevLetters.every(lg => lg.state === LetterStateEnum.CORRECT);
   const finish = win || lose;
 
   const usedLetters: Record<string, LetterStateEnum> = gameState.guesses
@@ -97,7 +99,7 @@ export const Game = () => {
     updateGameState(currentLetters);
   }
 
-  const addLetter = (letter: string) => () => {
+  const addLetter = (letter: string) => {
     if (currentLetters.length >= 5) {
       return;
     }
