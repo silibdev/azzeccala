@@ -50,7 +50,7 @@ export const Game = () => {
   return (
     <div>
       <GameContext.Provider value={gameStateArr}>
-        <WordGuesses></WordGuesses>
+        <WordGuesses wordGuesses={gameState.guesses}></WordGuesses>
         {!finish
           ? <Keyboard></Keyboard>
           : <GameOver gameState={gameState} win={win}></GameOver>}
