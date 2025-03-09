@@ -3,7 +3,8 @@
   "version": "1.1.0",
   "private": true,
   "dependencies": {
-    "@netlify/functions": "^1.0.0",
+    "@netlify/blobs": "^8.1.1",
+    "@netlify/functions": "^3.0.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
@@ -13,7 +14,7 @@
     "@types/react-dom": "^18.0.5",
     "cross-fetch": "^3.1.5",
     "dotenv": "^16.0.1",
-    "netlify-cli": "^10.3.3",
+    "netlify-cli": "^10.18.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-scripts": "5.0.1",
