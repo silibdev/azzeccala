@@ -1,11 +1,15 @@
+import { getStore, GetStoreOptions } from '@netlify/blobs';
+
 const fetch = require('cross-fetch').default;
 
-const UPSTASH_REDIS_URL = process.env.UPSTASH_REDIS_URL as string;
-const UPSTASH_REDIS_TOKEN = process.env.UPSTASH_REDIS_TOKEN;
-const WOTD_KEY = (process.env.PROD ? '' : 'test-') + 'word-of-the-day';
+
+const SITE_ID = process.env.SITE_ID;
+const TOKEN = process.env.TOKEN;
+const IS_PROD = !!process.env.PROD;
+const WOTD_KEY = (IS_PROD ? '' : 'test-') + 'word-of-the-day';
 const WORD_EXPIRATION = process.env.WORD_EXP || 'h:2';
 const DICTIONARY_KEY = 'dictionary';
-const USED_WORDS_KEY = (process.env.PROD ? '' : 'test-') + 'used-words';
+const USED_WORDS_KEY = (IS_PROD ? '' : 'test-') + 'used-words';
 
 export interface WordOfTheDay {
   word: string;
@@ -25,22 +29,25 @@ export enum LetterStateEnum {
   EMPTY = 'empty'
 }
 
-const execRedisCommand = (command: string, ...args: string[]) => fetch(UPSTASH_REDIS_URL, {
-  method: 'POST',
-  headers: {
-    Authorization: `Bearer ${UPSTASH_REDIS_TOKEN}`
-  },
-  body: JSON.stringify([command, ...args])
-})
-  .then((res: any) => res.json())
-  .then((json: any) => json.result)
+console.log({SITE_ID});
+const getBlobsStore = () => {
+  const storeOptions: GetStoreOptions = {
+    name: 'azzeccala-store',
+    fetch
+  };
+  if (!IS_PROD) {
+    storeOptions.siteID = SITE_ID;
+    storeOptions.token = TOKEN;
+  }
+  return getStore(storeOptions);
+}
 
 export const getWordOfTheDay = async (): Promise<WordOfTheDay> => {
-  const wotdData = await execRedisCommand('GET', WOTD_KEY);
+  const wotdData = await getBlobsStore().get(WOTD_KEY, {type: 'json'})
   if (wotdData) {
-    return JSON.parse(wotdData) as WordOfTheDay;
+    return wotdData as WordOfTheDay;
   }
-  return  updateWordOfTheDay();
+  return updateWordOfTheDay();
 }
 
 export const updateWordOfTheDay = async () => {
@@ -50,17 +57,18 @@ export const updateWordOfTheDay = async () => {
     id,
     timestamp: new Date().toISOString()
   };
-  return execRedisCommand('SET', WOTD_KEY, JSON.stringify(newWordOfTheDay)).then(() => newWordOfTheDay);
+  await getBlobsStore().setJSON(WOTD_KEY, newWordOfTheDay)
+  return newWordOfTheDay;
 }
 
-export const getDictionary = async (): Promise<string[]> => execRedisCommand('SMEMBERS', DICTIONARY_KEY);
+export const getDictionary = async (): Promise<string[]> => getBlobsStore().get(DICTIONARY_KEY, {type: 'json'});
 
 export const getUsedWords = async (): Promise<Set<string>> =>
-  execRedisCommand('SMEMBERS', USED_WORDS_KEY).then((usedWords: string[]) => new Set(usedWords));
+  getBlobsStore().get(USED_WORDS_KEY, {type: 'json'}).then((usedWords: string[]) => new Set(usedWords));
 
-export const addUsedWord = async (newWord: string) => execRedisCommand('SADD', USED_WORDS_KEY, newWord);
+export const addUsedWord = async (newWord: string) => getBlobsStore().set(USED_WORDS_KEY, newWord);
 
-export const clearUsedWord = async () => execRedisCommand('DEL', USED_WORDS_KEY)
+export const clearUsedWord = async () => getBlobsStore().delete(USED_WORDS_KEY);
 
 const getAbsoluteDate = (date: Date) => {
   return new Date(date.toDateString()).valueOf();
