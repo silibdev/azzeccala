@@ -33,12 +33,10 @@ console.log({SITE_ID});
 const getBlobsStore = () => {
   const storeOptions: GetStoreOptions = {
     name: 'azzeccala-store',
+    siteID: SITE_ID,
+    token: TOKEN,
     fetch
   };
-  if (!IS_PROD) {
-    storeOptions.siteID = SITE_ID;
-    storeOptions.token = TOKEN;
-  }
   return getStore(storeOptions);
 }
 
