@@ -8,12 +8,16 @@ const SITE_ID = process.env.SITE_ID;
 const TOKEN = process.env.TOKEN;
 const DICTIONARY_KEY = 'dictionary';
 const DICTIONARY_PATH = './dict.txt';
+const USED_WORDS_KEY = (true ? '' : 'test-') + 'used-words';
 
 const dictionary = fs.readFileSync(path.resolve(__dirname, DICTIONARY_PATH), 'utf-8').split('\n');
 
 const blobStore = getStore({fetch, name: 'azzeccala-store', siteID: SITE_ID, token: TOKEN});
 
-blobStore.setJSON(DICTIONARY_KEY, dictionary).then(console.log);
+await blobStore.setJSON(DICTIONARY_KEY, dictionary).then(console.log);
 
 // Potrebbe non essere subito aggiornato
-blobStore.get(DICTIONARY_KEY, {type: 'json'}).then(console.log);
+await blobStore.get(DICTIONARY_KEY, {type: 'json'}).then(console.log);
+
+// await blobStore.delete(USED_WORDS_KEY).then(console.log);
+
