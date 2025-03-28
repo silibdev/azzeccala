@@ -64,7 +64,11 @@ export const getDictionary = async (): Promise<string[]> => getBlobsStore().get(
 export const getUsedWords = async (): Promise<Set<string>> =>
   getBlobsStore().get(USED_WORDS_KEY, {type: 'json'}).then((usedWords: string[]) => new Set(usedWords));
 
-export const addUsedWord = async (newWord: string) => getBlobsStore().set(USED_WORDS_KEY, newWord);
+export const addUsedWord = async (newWord: string) => {
+  const usedWords = await getUsedWords();
+  usedWords.add(newWord);  
+  await getBlobsStore().setJSON(USED_WORDS_KEY, Array.from(usedWords));
+};
 
 export const clearUsedWord = async () => getBlobsStore().delete(USED_WORDS_KEY);
 
